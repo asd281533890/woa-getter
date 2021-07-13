@@ -1,9 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, session, Menu, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+let mainWindow
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -11,27 +13,38 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 async function createWindow () {
-  // Create the browser window.
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+  global.sharedObject = {
+    webviewPreload: path.join(__dirname, 'preload.js')
+  }
+  mainWindow = new BrowserWindow({
+    width: 600,
+    height: 500,
+    minHeight: 500,
+    minWidth: 600,
     webPreferences: {
 
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+      javascript: true,
+      webviewTag: true,
+      nodeIntegration: true, // process.env.ELECTRON_NODE_INTEGRATION
+      contextIsolation: false,
+      webSecurity: false
     }
+  })
+
+  ipcMain.on('ask-global', (event, sharedObjectKey) => {
+    event.returnValue = sharedObjectKey ? global.sharedObject[sharedObjectKey] : global.sharedObject
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    mainWindow.loadURL('app://./index.html')
   }
 }
 
@@ -55,14 +68,23 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
+    await session.defaultSession.loadExtension(path.join(__dirname, '../vue-devtools'), { allowFileAccess: true })
   }
   createWindow()
+  const appMenu = Menu.buildFromTemplate([
+    {
+      label: '关于',
+      submenu: [
+        {
+          label: '关于woa-getrer',
+          click: () => {
+            mainWindow.webContents.send('show-about')
+          }
+        }
+      ]
+    }
+  ])
+  Menu.setApplicationMenu(appMenu)
 })
 
 // Exit cleanly on request from parent process in development mode.

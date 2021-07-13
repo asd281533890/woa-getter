@@ -1,6 +1,7 @@
 {
   "name": "woa-getter",
   "version": "0.1.0",
+  "author": "Moving_J",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -13,8 +14,11 @@
   },
   "main": "background.js",
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "element-ui": "^2.15.3",
     "vue": "^2.6.11",
+    "vue-clipboard2": "^0.3.1",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -24,6 +28,7 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
     "electron": "^12.0.0",
     "electron-builder": "22.10.5",
     "electron-devtools-installer": "^3.1.0",
