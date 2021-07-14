@@ -4,6 +4,7 @@ import { app, protocol, BrowserWindow, session, Menu, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+app.commandLine.appendSwitch('--disable-http-cache')
 
 let mainWindow
 
