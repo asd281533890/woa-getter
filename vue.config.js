@@ -30,7 +30,7 @@ module.exports = {
       builderOptions: {
         appId: 'com.woagetter.app',
         asar: false,
-        productName: 'woaGetter',
+        productName: 'WoaGetter',
         copyright: 'Copyright © 2021 Moving_J',
         win: {
           icon: './public/icon/woaGetterIcon.ico',
