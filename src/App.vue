@@ -79,7 +79,7 @@
       :visible.sync="showAboutDlg">
       <p>
         <span>如果你喜欢本软件，去</span>
-        <span style="color: #069fff;text-decoration: underline;cursor: pointer;" @click="shell.openExternal('https://www.baidu.com')">主页</span>
+        <span style="color: #069fff;text-decoration: underline;cursor: pointer;" @click="shell.openExternal('https://github.com/asd281533890/woa-getter')">主页</span>
         <span>给个star吧！</span>
       </p>
       <p>
