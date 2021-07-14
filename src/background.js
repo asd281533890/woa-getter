@@ -39,6 +39,7 @@ async function createWindow () {
 
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      devTools: isDevelopment,
       javascript: true,
       webviewTag: true,
       nodeIntegration: true, // process.env.ELECTRON_NODE_INTEGRATION

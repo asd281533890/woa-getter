@@ -133,7 +133,7 @@ export function registerWebviewPlatformBridgeForPlatform (webview) {
   webview.addEventListener('ipc-message', e => {
     if (e.channel === 'platform-call-async-return') {
       const res = e.args[0]
-      const cbIndex = platformToWebviewQueue.findIndex(evt => evt.id === id)
+      const cbIndex = platformToWebviewQueue.findIndex(evt => evt.id === res.id)
       if (cbIndex !== -1) {
         if (res.code === 0) {
           platformToWebviewQueue[cbIndex].resolveCallback(res.data)
