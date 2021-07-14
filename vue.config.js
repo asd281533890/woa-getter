@@ -40,6 +40,8 @@ module.exports = {
           }]
         },
         nsis: {
+          // eslint-disable-next-line no-template-curly-in-string
+          artifactName: '${productName}_installer_${version}.${ext}',
           installerIcon: './public/icon/woaGetterIcon.ico',
           installerHeaderIcon: './public/icon/woaGetterIcon.ico',
           oneClick: true,
