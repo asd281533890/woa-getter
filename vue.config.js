@@ -1,30 +1,30 @@
-const sharedChainWebpack = config => {
-  config.module
-    .rule('eslint')
-    .use('eslint-loader')
-    .tap(options => {
-      options.fix = true
-      return options
-    })
+const setAlias = config => {
+  config.resolve.alias
+    .set('assets', '@/assets')
+    .set('components', '@/components')
+    .set('public', '@/../public')
+    .set('utils', '@/utils')
 }
 
 module.exports = {
   chainWebpack: config => {
-    sharedChainWebpack(config)
-    config.resolve.alias
-      .set('assets', '@/assets')
-      .set('components', '@/components')
-      .set('public', '@/../public')
-      .set('utils', '@/utils')
+    config.module
+      .rule('eslint')
+      .use('eslint-loader')
+      .tap(options => {
+        options.fix = true
+        return options
+      })
+    setAlias(config)
   },
   pluginOptions: {
     electronBuilder: {
-      // chainWebpackMainProcess: config => {
-      //   sharedChainWebpack(config)
-      // },
-      // chainWebpackRendererProcess: config => {
-      //   sharedChainWebpack(config)
-      // },
+      chainWebpackMainProcess: config => {
+        setAlias(config)
+      },
+      chainWebpackRendererProcess: config => {
+        setAlias(config)
+      },
       nodeIntegration: true,
       preload: './src/utils/preload.js',
       builderOptions: {
@@ -33,7 +33,11 @@ module.exports = {
         productName: 'woaGetter',
         copyright: 'Copyright © 2021 Moving_J',
         win: {
-          icon: './public/icon/woaGetterIcon.ico'
+          icon: './public/icon/woaGetterIcon.ico',
+          target: [{
+            target: 'nsis',
+            arch: ['x64', 'ia32']
+          }]
         },
         nsis: {
           installerIcon: './public/icon/woaGetterIcon.ico',
@@ -41,7 +45,7 @@ module.exports = {
           oneClick: true,
           perMachine: true,
           allowElevation: true,
-          shortcutName: '获取推送信息'
+          shortcutName: '一键获取推送信息'
         }
       }
     }

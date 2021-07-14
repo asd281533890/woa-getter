@@ -260,6 +260,7 @@ export default {
     margin: 0 auto;
   }
   .logo {
+    user-select: none;
     width: 580px;
     margin: 10px auto;
     display: flex;
