@@ -13,6 +13,20 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 async function createWindow () {
+  const appMenu = Menu.buildFromTemplate([
+    {
+      label: '关于',
+      submenu: [
+        {
+          label: '关于woa-getrer',
+          click: () => {
+            mainWindow.webContents.send('show-about')
+          }
+        }
+      ]
+    }
+  ])
+  Menu.setApplicationMenu(appMenu)
   global.sharedObject = {
     webviewPreload: path.join(__dirname, 'preload.js')
   }
@@ -31,6 +45,24 @@ async function createWindow () {
       contextIsolation: false,
       webSecurity: false
     }
+  })
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '复制',
+      role: 'copy'
+    },
+    {
+      label: '粘贴',
+      role: 'paste'
+    }
+  ])
+  // mainWindow.webContents.on('context-menu', () => {
+  //   contextMenu.popup()
+  // })
+
+  ipcMain.on('pop-context-menu', () => {
+    contextMenu.popup()
   })
 
   ipcMain.on('ask-global', (event, sharedObjectKey) => {
@@ -71,20 +103,6 @@ app.on('ready', async () => {
     await session.defaultSession.loadExtension(path.join(__dirname, '../vue-devtools'), { allowFileAccess: true })
   }
   createWindow()
-  const appMenu = Menu.buildFromTemplate([
-    {
-      label: '关于',
-      submenu: [
-        {
-          label: '关于woa-getrer',
-          click: () => {
-            mainWindow.webContents.send('show-about')
-          }
-        }
-      ]
-    }
-  ])
-  Menu.setApplicationMenu(appMenu)
 })
 
 // Exit cleanly on request from parent process in development mode.

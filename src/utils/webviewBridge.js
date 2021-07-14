@@ -109,9 +109,8 @@ export function registerWebviewPlatformBridgeForPlatform (webview) {
     })
   }
 
-  const id = uniqueId()
-
   webview.sendToWebviewAsync = (channel, params, options = { timeout: -1 }) => {
+    const id = uniqueId()
     webview.send('platform-call-async', channel, id, params)
     if (options.timeout !== -1) {
       setTimeout(() => {
