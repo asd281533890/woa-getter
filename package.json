@@ -42,7 +42,7 @@
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-template-compiler": "^2.6.11",
-    "webpack-obfuscator": "^2.5.0"
+    "webpack-obfuscator": "2.5.0"
   },
   "eslintConfig": {
     "root": true,
