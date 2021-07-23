@@ -7,8 +7,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:build-unpack": "vue-cli-service electron:build --dir",
+    "createHash": "electron ./build/createHash.js",
+    "genFileToken": "electron ./build/genFileToken.js",
+    "electron:build": "npm run createHash && npm run genFileToken && vue-cli-service electron:build",
+    "electron:build-unpack": "npm run createHash && npm run genFileToken && vue-cli-service electron:build --dir",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"

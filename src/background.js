@@ -1,8 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, session, Menu, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, session, Menu, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
+import checkFileTampered from './background/checkFileTampered'
 require('bytenode')
 process.chdir(path.join(process.resourcesPath, '../')) // 防止使用命令行打开本应用时，js找不到jsc
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -73,15 +74,25 @@ async function createWindow () {
     event.returnValue = sharedObjectKey ? global.sharedObject[sharedObjectKey] : global.sharedObject
   })
 
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
-    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
-  } else {
-    createProtocol('app')
-    // Load the index.html when not in development
-    mainWindow.loadURL('app://./index.html')
-  }
+  checkFileTampered().then(async () => {
+    if (process.env.WEBPACK_DEV_SERVER_URL) {
+      // Load the url of the dev server if in development mode
+      await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+      if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
+    } else {
+      createProtocol('app')
+      // Load the index.html when not in development
+      mainWindow.loadURL('app://./index.html')
+    }
+  }).catch(() => {
+    dialog.showMessageBox(mainWindow, {
+      message: '检测到软件已被篡改，请重新下载',
+      type: 'warning',
+      title: 'woa-getter'
+    }).finally(() => {
+      app.exit(0)
+    })
+  })
 }
 
 // Quit when all windows are closed.

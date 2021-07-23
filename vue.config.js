@@ -1,4 +1,5 @@
 const JavaScriptObfuscator = require('webpack-obfuscator')
+const hash = require('./build/hash.js')
 
 const setAlias = config => {
   config.resolve.alias
@@ -27,6 +28,20 @@ const addJavaScriptObfuscatorPlugin = config => {
 module.exports = {
   lintOnSave: 'error',
   productionSourceMap: false,
+  configureWebpack: {
+    devtool: false,
+    target: 'electron-renderer',
+    output: {
+      filename: `js/[name].${hash}.js`,
+      chunkFilename: `js/[name].${hash}.js`
+    }
+  },
+  css: {
+    extract: {
+      filename: `css/[name].${hash}.css`,
+      chunkFilename: `css/[name].${hash}.css`
+    }
+  },
   chainWebpack: config => {
     config.module
       .rule('eslint')
@@ -36,6 +51,7 @@ module.exports = {
         return options
       })
     setAlias(config)
+    // config.plugins.delete('preload-app')
     // config.optimization.delete('splitChunks')
   },
   pluginOptions: {
