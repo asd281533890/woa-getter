@@ -3,6 +3,8 @@
 import { app, protocol, BrowserWindow, session, Menu, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
+require('bytenode')
+process.chdir(path.join(process.resourcesPath, '../')) // 防止使用命令行打开本应用时，js找不到jsc
 const isDevelopment = process.env.NODE_ENV !== 'production'
 app.commandLine.appendSwitch('--disable-http-cache')
 

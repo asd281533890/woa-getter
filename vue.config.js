@@ -12,9 +12,10 @@ const addJavaScriptObfuscatorPlugin = config => {
   if (process.env.NODE_ENV === 'production') {
     config.plugin('obfuscator').use(JavaScriptObfuscator, [{
       compact: true, // 输出的代码压缩为一行
+      simplify: true,
       // selfDefendinig: true, // 自我防卫，代码被更改后将不会正常运作，与bytenode冲突
       // debugProtection: true, // debug保护，与bytenode冲突
-      disableConsoleOutput: false,
+      disableConsoleOutput: true,
       deadCodeInjection: true,
       splitStrings: true,
       splitStringsChunkLength: 10,
@@ -24,6 +25,8 @@ const addJavaScriptObfuscatorPlugin = config => {
 }
 
 module.exports = {
+  lintOnSave: 'error',
+  productionSourceMap: false,
   chainWebpack: config => {
     config.module
       .rule('eslint')
@@ -33,6 +36,7 @@ module.exports = {
         return options
       })
     setAlias(config)
+    // config.optimization.delete('splitChunks')
   },
   pluginOptions: {
     electronBuilder: {
@@ -47,6 +51,7 @@ module.exports = {
       nodeIntegration: true,
       preload: './src/utils/preload.js',
       builderOptions: {
+        afterPack: './build/afterPack.js',
         appId: 'com.woagetter.app',
         asar: false,
         productName: 'WoaGetter',
@@ -68,7 +73,8 @@ module.exports = {
           allowElevation: true,
           shortcutName: '一键获取推送信息'
         }
-      }
+      },
+      externals: ['bytenode']
     }
   }
 }
