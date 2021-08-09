@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/build/hash.js
+/src/background/fileToCheck.js
 
 
 # local env files

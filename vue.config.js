@@ -76,7 +76,7 @@ module.exports = {
           icon: './public/icon/woaGetterIcon.ico',
           target: [{
             target: 'nsis',
-            arch: ['x64', 'ia32']
+            arch: ['x64']
           }]
         },
         nsis: {
