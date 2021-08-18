@@ -9,6 +9,17 @@ const setAlias = config => {
     .set('utils', '@/utils')
 }
 
+const enableEslint = config => {
+  config.module
+    .rule('eslint')
+    .use('eslint-loader')
+    .tap(options => {
+      options.fix = true
+      return options
+    })
+  setAlias(config)
+}
+
 const addJavaScriptObfuscatorPlugin = config => {
   if (process.env.NODE_ENV === 'production') {
     config.plugin('obfuscator').use(JavaScriptObfuscator, [{
@@ -43,14 +54,7 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module
-      .rule('eslint')
-      .use('eslint-loader')
-      .tap(options => {
-        options.fix = true
-        return options
-      })
-    setAlias(config)
+    enableEslint(config)
     // config.plugins.delete('preload-app')
     // config.optimization.delete('splitChunks')
   },
@@ -62,6 +66,7 @@ module.exports = {
       },
       chainWebpackRendererProcess: config => {
         setAlias(config)
+        enableEslint(config)
         addJavaScriptObfuscatorPlugin(config)
       },
       nodeIntegration: true,
@@ -89,8 +94,7 @@ module.exports = {
           allowElevation: true,
           shortcutName: '一键获取推送信息'
         }
-      },
-      externals: ['bytenode']
+      }
     }
   }
 }

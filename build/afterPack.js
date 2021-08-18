@@ -1,5 +1,6 @@
 console.log('process.versions.node', process.versions.node)
 console.log('process.versions.v8', process.versions.v8)
+console.log('process.cwd()', process.cwd())
 
 const glob = require('glob')
 const path = require('path')
@@ -21,7 +22,7 @@ const filesToBytenode = {
   }
 }
 
-const requireBytenode = 'const v8 = require(\'v8\')\nv8.setFlagsFromString(\'--no-lazy\')\nrequire(\'bytenode\')\n'
+const requireBytenode = fs.readFileSync('src/assets/bytenode/index.js', 'utf-8')
 
 const compileJsToJsc = () => {
   const compilePromises = []

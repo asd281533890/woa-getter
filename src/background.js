@@ -4,7 +4,7 @@ import { app, protocol, BrowserWindow, session, Menu, ipcMain, dialog } from 'el
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
 import checkFileTampered from './background/checkFileTampered'
-require('bytenode')
+require('assets/bytenode/index.js')
 process.chdir(path.join(process.resourcesPath, '../')) // 防止使用命令行打开本应用时，js找不到jsc
 const isDevelopment = process.env.NODE_ENV !== 'production'
 app.commandLine.appendSwitch('--disable-http-cache')

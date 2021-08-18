@@ -1,8 +1,8 @@
 const crypto = require('crypto')
 const hash = require('./hash.js')
-const reuqireBytenodeTemplate = 'const v8 = require(\'v8\')\nv8.setFlagsFromString(\'--no-lazy\')\nrequire(\'bytenode\')\n'
 // const vueCliConfig = require('../vue.config.js')
 const fs = require('fs')
+const reuqireBytenodeTemplate = fs.readFileSync('src/assets/bytenode/index.js', 'utf-8')
 const yourPassword = 'asd281533890'
 const fileToCheck = []
 
