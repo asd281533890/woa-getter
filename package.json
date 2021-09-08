@@ -21,6 +21,7 @@
     "core-js": "^3.6.5",
     "electron-log": "^4.4.1",
     "element-ui": "^2.15.3",
+    "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.1",

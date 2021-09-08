@@ -2,6 +2,7 @@
 node_modules
 /dist
 /build/hash.js
+/build/resourcesApp
 /src/background/fileToCheck.js
 
 

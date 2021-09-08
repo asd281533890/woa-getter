@@ -43,8 +43,8 @@ module.exports = {
     devtool: false,
     target: 'electron-renderer',
     output: {
-      filename: `js/[name].${hash}.js`,
-      chunkFilename: `js/[name].${hash}.js`
+      filename: `[name].${hash}.js`,
+      chunkFilename: `[name].${hash}.js`
     }
   },
   css: {

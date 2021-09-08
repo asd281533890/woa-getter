@@ -97,7 +97,3 @@ Module._extensions[COMPILED_EXTNAME] = function (fileModule, filename) {
   const args = [fileModule.exports, require, fileModule, filename, dirname, process, global]
   return compiledWrapper.apply(fileModule.exports, args)
 }
-
-module.exports = {
-  compileCode
-}

@@ -3,50 +3,30 @@ console.log('process.versions.v8', process.versions.v8)
 console.log('process.cwd()', process.cwd())
 
 const glob = require('glob')
-const path = require('path')
-const fs = require('fs')
+const fs = require('fs-extra')
 const bytenode = require('bytenode')
-const vueConfig = require('../vue.config.js')
-const lodashGet = require('lodash/get.js')
+const path = require('path')
 
-const outputPath = lodashGet(vueConfig, 'pluginOptions.electronBuilder.builderOptions.directories.output') || './dist_electron'
-
-const filesToBytenode = {
-  rendererProcess: {
-    jsFilePath: `${outputPath}/win-unpacked/resources/app/js/*.js`,
-    pathRelativeToExe: './resources/app/js/'
-  },
-  preloadAndMainProcess: {
-    jsFilePath: `${outputPath}/win-unpacked/resources/app/*.js`,
-    pathRelativeToExe: './'
-  }
-}
-
-const requireBytenode = fs.readFileSync('src/assets/bytenode/index.js', 'utf-8')
-
-const compileJsToJsc = () => {
+const compileJsToJsc = context => {
   const compilePromises = []
-  Object.keys(filesToBytenode).forEach(key => {
-    glob.sync(filesToBytenode[key].jsFilePath).forEach(filename => {
-      const jscFileName = `${path.basename(filename).split('.')[0]}.jsc`
-      compilePromises.push(
-        bytenode.compileFile({
-          filename,
-          output: `${path.dirname(filename)}/${jscFileName}`,
-          electron: true
-        }).then(res => {
-          fs.writeFileSync(filename,
-            requireBytenode + `require('${filesToBytenode[key].pathRelativeToExe}${jscFileName}')\n`)
-          return res
-        })
-      )
-    })
+  glob.sync(`${context.appOutDir}/resources/app/*.js`).forEach(fullFilePath => {
+    compilePromises.push(
+      bytenode.compileFile({
+        filename: fullFilePath,
+        output: fullFilePath + 'c',
+        electron: true
+      }).then(res => {
+        fs.moveSync(`build/resourcesApp/${path.basename(fullFilePath)}`, fullFilePath, { overwrite: true })
+        return res
+      })
+    )
   })
+
   return Promise.all(compilePromises).then(res => {
     console.log(res)
   })
 }
 
-exports.default = async () => {
-  await compileJsToJsc()
+exports.default = async context => {
+  await compileJsToJsc(context)
 }
