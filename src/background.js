@@ -38,6 +38,7 @@ async function createWindow () {
     height: 500,
     minHeight: 500,
     minWidth: 600,
+    show: false,
     webPreferences: {
 
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -74,6 +75,7 @@ async function createWindow () {
   })
 
   checkFileTampered().then(async () => {
+    mainWindow.show()
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
       await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
