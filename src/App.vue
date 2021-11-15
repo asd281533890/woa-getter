@@ -1,34 +1,30 @@
 <template>
   <div id="app">
-    <div :class="{logo: true, 'logo-loading': loading}">
-      <img :src="loading ? require('@/assets/logo-no-arrow.png') : require('@/assets/logo.png')" draggable="false">
+    <div :class="{ logo: true, 'logo-loading': loading }">
+      <img :src=" loading ? require('@/assets/logo-no-arrow.png'): require('@/assets/logo.png')" draggable="false">
       <i class="el-icon-loading" draggable="false"></i>
     </div>
     <div class="item-wrapper">
       <div class="info-item">
         <div class="item-name">推送链接：</div>
-        <el-input v-model="link" size="small" spellcheck="false" @mousedown.native="linkInputMouseDownHandler"></el-input>
-        <el-button size="small" @click="clickGetHandler(link)" :disabled="!Boolean(link)">获取</el-button>
-        <el-button
+        <el-input
+          v-model="link"
           size="small"
-          @click="copyText(link)"
-          :disabled="!Boolean(link)">复制</el-button>
+          spellcheck="false"
+          @mousedown.native="linkInputMouseDownHandler"
+          @keydown.native="e => link && e.key.toLowerCase() === 'enter' && clickGetHandler(link)"></el-input>
+        <el-button size="small" @click="clickGetHandler(link)" :disabled="!link">获取</el-button>
+        <el-button size="small" @click="copyText(link)" :disabled="!link">复制</el-button>
       </div>
       <div class="info-item">
         <div class="item-name">推送标题：</div>
         <el-input v-model="title" size="small" spellcheck="false" @mousedown.native="linkInputMouseDownHandler"></el-input>
-        <el-button
-          size="small"
-          @click="copyText(title)"
-          :disabled="!Boolean(title)">复制</el-button>
+        <el-button size="small" @click="copyText(title)" :disabled="!title">复制</el-button>
       </div>
       <div class="info-item">
         <div class="item-name">推送作者：</div>
         <el-input v-model="author" size="small" spellcheck="false" @mousedown.native="linkInputMouseDownHandler"></el-input>
-        <el-button
-          size="small"
-          @click="copyText(author)"
-          :disabled="!Boolean(author)">复制</el-button>
+        <el-button size="small" @click="copyText(author)" :disabled="!author">复制</el-button>
       </div>
       <div class="info-item">
         <div class="item-name">推送摘要：</div>
@@ -36,14 +32,10 @@
           v-model="summary"
           size="small"
           type="textarea"
-          :autosize="{ minRows: 2, maxRows: 5}"
+          :autosize="{ minRows: 2, maxRows: 5 }"
           spellcheck="false"
-          @mousedown.native="linkInputMouseDownHandler">
-        </el-input>
-        <el-button
-          size="small"
-          @click="copyText(summary)"
-          :disabled="!Boolean(summary)">复制</el-button>
+          @mousedown.native="linkInputMouseDownHandler"></el-input>
+        <el-button size="small" @click="copyText(summary)" :disabled="!summary">复制</el-button>
       </div>
       <div class="info-item cover">
         <div class="item-name">封面图片链接：</div>
@@ -51,24 +43,20 @@
           v-model="coverLink"
           size="small"
           type="textarea"
-          :autosize="{ minRows: 3, maxRows: 5}"
+          :autosize="{ minRows: 3, maxRows: 5 }"
           spellcheck="false"
-          @mousedown.native="linkInputMouseDownHandler">
-        </el-input>
+          @mousedown.native="linkInputMouseDownHandler"></el-input>
         <el-button
           size="small"
           @click="copyText(coverLink)"
-          :disabled="!Boolean(coverLink)">复制</el-button>
+          :disabled="!coverLink">复制</el-button>
         <el-image class="cover-image" :src="coverLink" alt="封面图片">
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
             <span>推送封面，可直接拖动保存</span>
           </div>
         </el-image>
-        <el-button
-          size="small"
-          @click="saveCoverImage"
-          :disabled="!Boolean(coverLink)">保存图片</el-button>
+        <el-button size="small" @click="saveCoverImage" :disabled="!coverLink">保存图片</el-button>
       </div>
     </div>
     <el-dialog
@@ -79,32 +67,28 @@
       :visible.sync="showAboutDlg">
       <p>
         <span>如果你喜欢本软件，去</span>
-        <span style="color: #069fff;text-decoration: underline;cursor: pointer;" @click="shell.openExternal('https://github.com/asd281533890/woa-getter')">主页</span>
+        <span
+          style="color: #069fff; text-decoration: underline; cursor: pointer"
+          @click="shell.openExternal('https://github.com/asd281533890/woa-getter')">主页</span>
         <span>给个star吧！</span>
       </p>
-      <p>
-        联系方式,有偿定制功能：281533890@qq.com
-      </p>
-      <p>
-        如果这个软件有帮助到你，可以请我喝杯咖啡
-      </p>
+      <p>联系方式,有偿定制功能：281533890@qq.com</p>
+      <p>如果这个软件有帮助到你，可以请我喝杯咖啡</p>
       <p>
         <img
           ondragstart="return false;"
           :src="require('assets/collection_code.jpg')"
-          style="width: 140px; height: 140px; border: 1px solid #bbb;"
-          alt="微信收款码">
+          style="width: 140px; height: 140px; border: 1px solid #bbb"
+          alt="微信收款码"/>
       </p>
     </el-dialog>
     <webview
       ref="webviewEl"
-      :src="webviewSrc"
+      src="about:blank"
       v-show="false"
       nodeintegration
       :preload="preload"
-      @dom-ready="getArticleInfo"
-      webpreferences="nodeIntegration=1,contextIsolation=0,webSecurity=0">
-    </webview>
+      webpreferences="nodeIntegration=1,contextIsolation=0,webSecurity=0"></webview>
   </div>
 </template>
 
@@ -122,8 +106,6 @@ export default {
       author: '',
       summary: '',
       coverLink: '',
-      webviewSrc: '',
-      webviewEl: undefined,
       preload: global.webviewPreload,
       loading: false,
       showAboutDlg: false,
@@ -136,34 +118,27 @@ export default {
     })
   },
   mounted () {
-    this.webviewEl = this.$refs.webviewEl
-    registerWebviewPlatformBridgeForPlatform(this.webviewEl)
-  },
-  watch: {
-    // link (val) {
-    //   if (val.startsWith('https://mp.weixin.qq.com') || val.startsWith('http://mp.weixin.qq.com')) {
-    //     this.webviewSrc = val
-    //   }
-    // }
+    registerWebviewPlatformBridgeForPlatform(this.$refs.webviewEl)
   },
   methods: {
+    aaa (e) { console.log(e) },
     clickGetHandler (link) {
       this.loading = true
-      this.initData()
+      this.resetData()
       if (link === '') {
-        this.$message({
+        this.loading = false
+        return this.$message({
           type: 'warning',
           message: '请输入推送链接',
           showClose: true
         })
-        this.loading = false
-        return
       }
       if (link.startsWith('https://mp.weixin.qq.com') || link.startsWith('http://mp.weixin.qq.com')) {
-        if (this.webviewSrc === link) {
-          this.webviewEl.reload()
-        }
-        this.webviewSrc = link
+        this.$nextTick(() => {
+          const webviewEl = this.$refs.webviewEl
+          webviewEl.addEventListener('did-finish-load', this.getArticleInfo, { once: true })
+          webviewEl.loadURL(link)
+        })
       } else {
         this.$message({
           type: 'warning',
@@ -174,16 +149,12 @@ export default {
       }
     },
     getArticleInfo () {
-      this.webviewEl.sendToWebviewAsync('get-article-info').then(articleInfo => {
+      this.$refs.webviewEl.sendToWebviewAsync('get-article-info').then(articleInfo => {
         this.title = articleInfo.title
         this.author = articleInfo.author
         this.summary = articleInfo.summary
         this.coverLink = articleInfo.coverLink
-        this.$message({
-          type: 'success',
-          message: '获取成功',
-          duration: 600
-        })
+        this.$message({ type: 'success', message: '获取成功', duration: 1200 })
       }).catch(() => {
         this.$message.warning('获取失败，请重试')
       }).finally(() => {
@@ -196,7 +167,7 @@ export default {
       aElement.href = this.coverLink
       aElement.click()
     },
-    initData () {
+    resetData () {
       this.title = ''
       this.author = ''
       this.summary = ''
@@ -237,12 +208,12 @@ export default {
 }
 .el-input {
   input {
-    padding: 0 7px!important;
+    padding: 0 7px !important;
   }
 }
 .el-textarea {
   textarea {
-    padding: 5px 7px!important;
+    padding: 5px 7px !important;
   }
 }
 

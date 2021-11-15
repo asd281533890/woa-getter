@@ -11,6 +11,9 @@ let seed = 1
 const Message = function (options) {
   if (Vue.prototype.$isServer) return
   options = options || {}
+  if (options.showClose !== false) {
+    options.showClose = true
+  }
   if (typeof options === 'string') {
     options = {
       message: options
