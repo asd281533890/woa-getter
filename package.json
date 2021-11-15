@@ -11,7 +11,7 @@
     "genFileToken": "electron ./build/genFileToken.js",
     "electron:build": "npm run createHash && npm run genFileToken && vue-cli-service electron:build",
     "electron:build-unpack": "npm run createHash && npm run genFileToken && vue-cli-service electron:build --dir",
-    "electron:serve": "vue-cli-service electron:serve",
+    "electron:serve": "npm run createHash && npm run genFileToken && vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
@@ -45,7 +45,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-template-compiler": "^2.6.11",
