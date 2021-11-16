@@ -1,12 +1,25 @@
+'use strict'
+
 const fs = require('fs')
+const vm = require('vm')
 const v8 = require('v8')
 const path = require('path')
+const Module = require('module')
 const fork = require('child_process').fork
+const COMPILED_EXTNAME = '.jsc'
+
 v8.setFlagsFromString('--no-lazy')
 if (Number.parseInt(process.versions.node, 10) >= 12) {
-  v8.setFlagsFromString('--no-flush-bytecode')
+  v8.setFlagsFromString('--no-flush-bytecode') // Thanks to A-Parser (@a-parser)
 }
-const COMPILED_EXTNAME = '.jsc'
+
+const compileCode = function (javascriptCode) {
+  if (typeof javascriptCode !== 'string') {
+    throw new Error(`javascriptCode must be string. ${typeof javascriptCode} was given.`)
+  }
+  const script = new vm.Script(javascriptCode, { produceCachedData: true })
+  return (script.createCachedData && script.createCachedData.call) ? script.createCachedData() : script.cachedData
+}
 
 const compileElectronCode = function (javascriptCode) {
   return new Promise((resolve, reject) => {
@@ -52,20 +65,22 @@ const compileElectronCode = function (javascriptCode) {
 
 const compileFile = async function (args, output) {
   const filename = args.filename
-  // @ts-ignore
+  if (typeof filename !== 'string') {
+    throw new Error(`filename must be a string. ${typeof filename} was given.`)
+  }
   const compiledFilename = args.output || output || filename.slice(0, -3) + COMPILED_EXTNAME
+  if (typeof compiledFilename !== 'string') {
+    throw new Error(`output must be a string. ${typeof compiledFilename} was given.`)
+  }
   const javascriptCode = fs.readFileSync(filename, 'utf-8')
-  const code = javascriptCode.replace(/^#!.*/, '')
+  const code = Module.wrap(javascriptCode.replace(/^#!.*/, ''))
   const bytecodeBuffer = await compileElectronCode(code)
   fs.writeFileSync(compiledFilename, bytecodeBuffer)
   return compiledFilename
 }
 
-global.bytenode = {
+module.exports = {
+  compileCode,
   compileFile,
   compileElectronCode
-}
-
-module.exports = {
-  compileFile
 }
