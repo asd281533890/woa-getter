@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div :class="{ logo: true, 'logo-loading': loading }">
-      <img :src=" loading ? require('@/assets/logo-no-arrow.png'): require('@/assets/logo.png')" draggable="false">
+      <img :src=" loading ? require('@/assets/images/logo-no-arrow.png'): require('@/assets/images/logo.png')" draggable="false">
       <i class="el-icon-loading" draggable="false"></i>
     </div>
     <div class="item-wrapper">
@@ -60,6 +60,7 @@
       </div>
     </div>
     <el-dialog
+      top="30vh"
       width="370px"
       custom-class="about-dlg"
       append-to-body
@@ -69,18 +70,10 @@
         <span>如果你喜欢本软件，去</span>
         <span
           style="color: #069fff; text-decoration: underline; cursor: pointer"
-          @click="shell.openExternal('https://github.com/asd281533890/woa-getter')">主页</span>
+          @click="shell.openExternal('https://github.com/asd281533890/woa-getter')"> 主页 </span>
         <span>给个star吧！</span>
       </p>
       <p>联系方式,有偿定制功能：281533890@qq.com</p>
-      <p>如果这个软件有帮助到你，可以请我喝杯咖啡</p>
-      <p>
-        <img
-          ondragstart="return false;"
-          :src="require('assets/collection_code.jpg')"
-          style="width: 140px; height: 140px; border: 1px solid #bbb"
-          alt="微信收款码"/>
-      </p>
     </el-dialog>
     <webview
       ref="webviewEl"
