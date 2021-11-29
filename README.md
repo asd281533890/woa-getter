@@ -11,3 +11,5 @@ woa-getter 全称是 wechat official account getter，是一款使用 electron �
 运行项目：`npm run electron:serve`
 
 打包项目：`npm run electron:build`
+
+下载地址: [https://github.com/asd281533890/woa-getter/releases](https://github.com/asd281533890/woa-getter/releases)
