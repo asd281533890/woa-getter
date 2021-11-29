@@ -48,6 +48,11 @@ module.exports = {
     }
   },
   css: {
+    loaderOptions: {
+      sass: {
+        implementation: require('sass') // This line must in sass option
+      }
+    },
     extract: {
       filename: `css/[name].${hash}.css`,
       chunkFilename: `css/[name].${hash}.css`
